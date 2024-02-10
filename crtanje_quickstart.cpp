@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -28,6 +28,31 @@ void reshape(int, int);
 void idle();
 void readSensors(unsigned char, int, int);
 int zvuk = 0;
+int sensors[2][8] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int direction[2] = { 0, 0 };
+
+// user defined functions
+void sensorDisplay();
+void drawFR1();
+void drawFR2();
+void drawFR3();
+void drawFL1();
+void drawFL2();
+void drawFL3();
+void drawBR1();
+void drawBR2();
+void drawBR3();
+void drawBL1();
+void drawBL2();
+void drawBL3();
+
+
+void selectBackgroundColor(int r, int g, int b);
+void activateFrontRightSensor(unsigned char key);
+void activateFrontLeftSensor(unsigned char key);
+void activateBackRightSensor(unsigned char key);
+void activateBackLeftSensor(unsigned char key);
+
 
 unsigned char* loadPPM(const char* filename, int& width, int& height) {
 	const int BUFSIZE = 128;
@@ -134,106 +159,142 @@ int main(int argc, char** argv) {
 }
 
 void readSensors(unsigned char key, int x, int y) {
-	switch (key) {
-	case 'e':
-		zvuk = 1;
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBegin(GL_QUADS);
-		// drawing a background white rectangle
-		glColor3f(1, 1, 1); // choosing a color
-		glTexCoord2f(0, 1); glVertex3f(-2, -1, 0);
-		glTexCoord2f(1, 1); glVertex3f(2, -1, 0);
-		glTexCoord2f(1, 0); glVertex3f(2, 1, 0);
-		glTexCoord2f(0, 0); glVertex3f(-2, 1, 0);
-		glEnd();
-		// drawing a rectangle
-		glColor3f(1.0, 0.0, 0.0);
-		glBegin(GL_QUADS);
-		glVertex3f(-1.22f, -0.20f, 0.0f);
-		glVertex3f(-1.15f, -0.16f, 0.0f);
-		glVertex3f(-1.03f, -0.36f, 0.0f);
-		glVertex3f(-1.1f, -0.40f, 0.0f);
-		// drawing a rectangle
-		glColor3f(1.0, 0.35, 0.35);
-		glVertex3f(-1.35f, -0.20f, 0.00f);
-		glVertex3f(-1.28f, -0.16f, 0.0f);
-		glVertex3f(-1.09f, -0.46f, 0.00f);
-		glVertex3f(-1.15f, -0.50f, 0.0f);
-		// drawing a rectangle
-		glColor3f(1.0, 0.50, 0.50);
-		glVertex3f(-1.48f, -0.21f, 0.0f);
-		glVertex3f(-1.40f, -0.16f, 0.0f);
-		glVertex3f(-1.14f, -0.55f, 0.0f);
-		glVertex3f(-1.22f, -0.60f, 0.0f);
-		glEnd();
-		glutSwapBuffers();
-		break;
-	case 'w':
-		zvuk = 2;
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBegin(GL_QUADS);
-		// drawing a background white rectangle
-		glColor3f(1, 1, 1); // choosing a color
-		glTexCoord2f(0, 1); glVertex3f(-2, -1, 0);
-		glTexCoord2f(1, 1); glVertex3f(2, -1, 0);
-		glTexCoord2f(1, 0); glVertex3f(2, 1, 0);
-		glTexCoord2f(0, 0); glVertex3f(-2, 1, 0);
-		// drawing a rectangle
-		glColor3f(1.0, 0.35, 0.35);
-		glVertex3f(-1.35f, -0.20f, 0.00f);
-		glVertex3f(-1.28f, -0.16f, 0.0f);
-		glVertex3f(-1.09f, -0.46f, 0.00f);
-		glVertex3f(-1.15f, -0.50f, 0.0f);
-		// drawing a rectangle
-		glColor3f(1.0, 0.50, 0.50);
-		glVertex3f(-1.48f, -0.21f, 0.0f);
-		glVertex3f(-1.40f, -0.16f, 0.0f);
-		glVertex3f(-1.14f, -0.55f, 0.0f);
-		glVertex3f(-1.22f, -0.60f, 0.0f);
-		glEnd();
-		glutSwapBuffers();
-		break;
+	switch (key)
+	{
 	case 'q':
-		zvuk = 3;
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBegin(GL_QUADS);
-		// drawing a background white rectangle
-		glColor3f(1, 1, 1); // choosing a color
-		glTexCoord2f(0, 1); glVertex3f(-2, -1, 0);
-		glTexCoord2f(1, 1); glVertex3f(2, -1, 0);
-		glTexCoord2f(1, 0); glVertex3f(2, 1, 0);
-		glTexCoord2f(0, 0); glVertex3f(-2, 1, 0);
-		// drawing a rectangle
-		glColor3f(1.0, 0.50, 0.50);
-		glVertex3f(-1.48f, -0.21f, 0.0f);
-		glVertex3f(-1.40f, -0.16f, 0.0f);
-		glVertex3f(-1.14f, -0.55f, 0.0f);
-		glVertex3f(-1.22f, -0.60f, 0.0f);
-		glEnd();
-		glutSwapBuffers();
-		break;
-	case 'r':
-		zvuk = 0;
+		sensors[0][1] = 0;
+		sensors[0][2] = 0;
+		sensors[0][3] = 0;
 		display();
 		break;
+	case 'w':
+		sensors[0][1] = 1;
+		sensors[0][2] = 0;
+		sensors[0][3] = 0;
+		display();
+		break;
+	case 'e':
+		sensors[0][1] = 1;
+		sensors[0][2] = 1;
+		sensors[0][3] = 0;
+		display();
+		break;
+	case 'r':
+		sensors[0][1] = 1;
+		sensors[0][2] = 1;
+		sensors[0][3] = 1;
+		display();
+		break;
+	case 't':
+		sensors[0][4] = 1;
+		sensors[0][5] = 1;
+		sensors[0][6] = 1;
+		display();
+		break;
+	case 'z':
+		sensors[0][4] = 0;
+		sensors[0][5] = 1;
+		sensors[0][6] = 1;
+		display();
+		break;
+	case 'u':
+		sensors[0][4] = 0;
+		sensors[0][5] = 0;
+		sensors[0][6] = 1;
+		display();
+		break;
+	case 'i':
+		sensors[0][4] = 0;
+		sensors[0][5] = 0;
+		sensors[0][6] = 0;
+		display();
+		break;
+	case 'a':
+		sensors[1][1] = 0;
+		sensors[1][2] = 0;
+		sensors[1][3] = 0;
+		display();
+		break;
+	case 's':
+		sensors[1][1] = 1;
+		sensors[1][2] = 0;
+		sensors[1][3] = 0;
+		display();
+		break;
+	case 'd':
+		sensors[1][1] = 1;
+		sensors[1][2] = 1;
+		sensors[1][3] = 0;
+		display();
+		break;
+	case 'f':
+		sensors[1][1] = 1;
+		sensors[1][2] = 1;
+		sensors[1][3] = 1;
+		display();
+		break;
+	case 'g':
+		sensors[1][4] = 1;
+		sensors[1][5] = 1;
+		sensors[1][6] = 1;
+		display();
+		break;
+	case 'h':
+		sensors[1][4] = 0;
+		sensors[1][5] = 1;
+		sensors[1][6] = 1;
+		display();
+		break;
+	case 'j':
+		sensors[1][4] = 0;
+		sensors[1][5] = 0;
+		sensors[1][6] = 1;
+		display();
+		break;
+	case 'k':
+		sensors[1][4] = 0;
+		sensors[1][5] = 0;
+		sensors[1][6] = 0;
+		display();
+		break;
+	case 'y':
+		direction[0] = 1;
+		direction[1] = 0;
+		display();
+		break;
+	case 'x':
+		direction[0] = 0;
+		direction[1] = 1;
+		display();
+		break;
+	case 'c':
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				sensors[i][j] = 0;
+			}
+		}
+		display();
 	}
+	printf("Activation matrix\n");
+	for (int i = 0; i < 2; i++) 
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			printf("%d\t", sensors[i][j]);
+		}
+		printf("\n");
+	}
+	printf("Direction: %d %d\n", direction[0], direction[1]);
 }
 void display() {
 	cerr << "display callback" << endl;
-	// clean color buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// start drawing quads
 	glBegin(GL_QUADS);
-	// choose color (white)
-	glColor3f(1, 1, 1);
-	// coordinates of initial white rectangle for the background
-	glTexCoord2f(0, 1); glVertex3f(-2, -1, 0);
-	glTexCoord2f(1, 1); glVertex3f(2, -1, 0);
-	glTexCoord2f(1, 0); glVertex3f(2, 1, 0);
-	glTexCoord2f(0, 0); glVertex3f(-2, 1, 0);
-	// end of drawing
+	selectBackgroundColor(1, 1, 1);
+	sensorDisplay();
 	glEnd();
-	// swap buffers to show new graphics
 	glutSwapBuffers();
 }
 
@@ -258,6 +319,158 @@ void idle()
 	// here comes the code which will be executed when program state is idle
 }
 
+void selectBackgroundColor(int r, int g, int b)
+{
+	// drawing a background white rectangle
+	glColor3f(r, g, b); // choosing a color
+	glTexCoord2f(0, 1); glVertex3f(-2, -1, 0);
+	glTexCoord2f(1, 1); glVertex3f(2, -1, 0);
+	glTexCoord2f(1, 0); glVertex3f(2, 1, 0);
+	glTexCoord2f(0, 0); glVertex3f(-2, 1, 0);
+}
 
+void sensorDisplay()
+{
+	if (sensors[0][1] == 1)
+	{
+		drawFR1();
+		if (sensors[0][2] == 1)
+		{
+			drawFR2();
+			if (sensors[0][3] == 1)
+				drawFR3();
+		}
+	}
 
+	if (sensors[1][1] == 1)
+	{
+		drawFL1();
+		if (sensors[1][2] == 1)
+		{
+			drawFL2();
+			if (sensors[1][3] == 1)
+				drawFL3();
+		}
+	}
 
+	if (sensors[0][6] == 1)
+	{
+		drawBR1();
+		if (sensors[0][5] == 1)
+		{
+			drawBR2();
+			if (sensors[0][4] == 1)
+				drawBR3();
+		}
+	}
+	if (sensors[1][6] == 1)
+	{
+		drawBL1();
+		if (sensors[1][5] == 1)
+		{
+			drawBL2();
+			if (sensors[1][4] == 1)
+				drawBL3();
+		}
+	}
+
+		
+}
+
+void drawFR1()
+{
+	glColor3f(1.0, 0.50, 0.50);
+	glVertex3f(-1.48f, 0.21f, 0.0f);
+	glVertex3f(-1.40f, 0.16f, 0.0f);
+	glVertex3f(-1.14f, 0.55f, 0.0f);
+	glVertex3f(-1.22f, 0.60f, 0.0f);
+}
+
+void drawFR2()
+{
+	glColor3f(1.0, 0.35, 0.35);
+	glVertex3f(-1.35f, 0.20f, 0.00f);
+	glVertex3f(-1.28f, 0.16f, 0.0f);
+	glVertex3f(-1.09f, 0.46f, 0.00f);
+	glVertex3f(-1.15f, 0.50f, 0.0f);
+}
+void drawFR3()
+{
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.22f, 0.20f, 0.0f);
+	glVertex3f(-1.15f, 0.16f, 0.0f);
+	glVertex3f(-1.03f, 0.36f, 0.0f);
+	glVertex3f(-1.1f, 0.40f, 0.0f);
+}
+void drawFL1()
+{
+	glColor3f(1.0, 0.50, 0.50);
+	glVertex3f(-1.48f, -0.21f, 0.0f);
+	glVertex3f(-1.40f, -0.16f, 0.0f);
+	glVertex3f(-1.14f, -0.55f, 0.0f);
+	glVertex3f(-1.22f, -0.60f, 0.0f);
+}
+void drawFL2()
+{
+	glColor3f(1.0, 0.35, 0.35);
+	glVertex3f(-1.35f, -0.20f, 0.00f);
+	glVertex3f(-1.28f, -0.16f, 0.0f);
+	glVertex3f(-1.09f, -0.46f, 0.00f);
+	glVertex3f(-1.15f, -0.50f, 0.0f);
+}
+void drawFL3()
+{
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-1.22f, -0.20f, 0.0f);
+	glVertex3f(-1.15f, -0.16f, 0.0f);
+	glVertex3f(-1.03f, -0.36f, 0.0f);
+	glVertex3f(-1.1f, -0.40f, 0.0f);
+}
+void drawBR1()
+{
+	glColor3f(1.0, 0.50, 0.50);
+	glVertex3f(1.48f, 0.21f, 0.0f);
+	glVertex3f(1.40f, 0.16f, 0.0f);
+	glVertex3f(1.14f, 0.55f, 0.0f);
+	glVertex3f(1.22f, 0.60f, 0.0f);
+}
+void drawBR2()
+{
+	glColor3f(1.0, 0.35, 0.35);
+	glVertex3f(1.35f, 0.20f, 0.00f);
+	glVertex3f(1.28f, 0.16f, 0.0f);
+	glVertex3f(1.09f, 0.46f, 0.00f);
+	glVertex3f(1.15f, 0.50f, 0.0f);
+}
+void drawBR3()
+{
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(1.22f, 0.20f, 0.0f);
+	glVertex3f(1.15f, 0.16f, 0.0f);
+	glVertex3f(1.03f, 0.36f, 0.0f);
+	glVertex3f(1.1f, 0.40f, 0.0f);
+}
+void drawBL1()
+{
+	glColor3f(1.0, 0.50, 0.50);
+	glVertex3f(1.48f, -0.21f, 0.0f);
+	glVertex3f(1.40f, -0.16f, 0.0f);
+	glVertex3f(1.14f, -0.55f, 0.0f);
+	glVertex3f(1.22f, -0.60f, 0.0f);
+}
+void drawBL2() 
+{
+	glColor3f(1.0, 0.35, 0.35);
+	glVertex3f(1.35f, -0.20f, 0.00f);
+	glVertex3f(1.28f, -0.16f, 0.0f);
+	glVertex3f(1.09f, -0.46f, 0.00f);
+	glVertex3f(1.15f, -0.50f, 0.0f);
+}
+void drawBL3()
+{
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(1.22f, -0.20f, 0.0f);
+	glVertex3f(1.15f, -0.16f, 0.0f);
+	glVertex3f(1.03f, -0.36f, 0.0f);
+	glVertex3f(1.1f, -0.40f, 0.0f);
+}
