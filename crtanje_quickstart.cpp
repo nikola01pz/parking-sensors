@@ -48,11 +48,6 @@ void drawBL3();
 
 
 void selectBackgroundColor(int r, int g, int b);
-void activateFrontRightSensor(unsigned char key);
-void activateFrontLeftSensor(unsigned char key);
-void activateBackRightSensor(unsigned char key);
-void activateBackLeftSensor(unsigned char key);
-
 
 unsigned char* loadPPM(const char* filename, int& width, int& height) {
 	const int BUFSIZE = 128;

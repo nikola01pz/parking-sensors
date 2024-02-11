@@ -1,0 +1,5 @@
+﻿GenerateSound.obj : error LNK2019: unresolved external symbol sf_open referenced in function "public: __cdecl SndfileHandle::SndfileHandle(char const *,int,int,int,int)" (??0SndfileHandle@@QEAA@PEBDHHHH@Z)
+GenerateSound.obj : error LNK2019: unresolved external symbol sf_write_float referenced in function "public: __int64 __cdecl SndfileHandle::write(float const *,__int64)" (?write@SndfileHandle@@QEAA_JPEBM_J@Z)
+GenerateSound.obj : error LNK2019: unresolved external symbol sf_close referenced in function "public: __cdecl SndfileHandle::SNDFILE_ref::~SNDFILE_ref(void)" (??1SNDFILE_ref@SndfileHandle@@QEAA@XZ)
+C:\Users\Kresimir\source\repos\GenerateSound\GenerateSound\libsndfile\lib\libsndfile-1.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\Kresimir\source\repos\GenerateSound\x64\Debug\GenerateSound.exe : fatal error LNK1120: 3 unresolved externals

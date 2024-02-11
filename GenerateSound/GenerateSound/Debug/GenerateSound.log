@@ -1,0 +1,3 @@
+﻿  GenerateSound.cpp
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\GenerateSound\GenerateSound\GenerateSound.cpp(56,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  GenerateSound.vcxproj -> C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\GenerateSound\Debug\GenerateSound.exe
