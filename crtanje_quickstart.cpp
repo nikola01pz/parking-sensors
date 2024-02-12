@@ -353,69 +353,81 @@ void selectBackgroundColor(int r, int g, int b)
 void sensorDisplay()
 {
 	PlaySound(NULL, NULL, 0);
-	if (sensors[0][1] == 1)
+	if (sensors[0][3] == 1)
+	{
+		drawFR1();
+		drawFR2();
+		drawFR3();
+		makeSound(3);
+	}
+	else if (sensors[0][2] == 1)
+	{
+		drawFR1();
+		drawFR2();
+		makeSound(2);
+	} 
+	else if (sensors[0][1] == 1)
 	{
 		drawFR1();
 		makeSound(1);
-		if (sensors[0][2] == 1)
-		{
-			drawFR2();
-			makeSound(2);
-			if (sensors[0][3] == 1)
-			{
-				drawFR3();
-				makeSound(3);
-			}
-		}
 	}
 
-	if (sensors[1][1] == 1)
+	if (sensors[1][3] == 1)
+	{
+		drawFL1();
+		drawFL2();
+		drawFL3();
+		makeSound(3);
+	}
+	else if (sensors[1][2] == 1)
+	{
+		drawFL1();
+		drawFL2();
+		makeSound(2);
+	}
+	else if (sensors[1][1] == 1)
 	{
 		drawFL1();
 		makeSound(1);
-		if (sensors[1][2] == 1)
-		{
-			drawFL2();
-			makeSound(2);
-			if (sensors[1][3] == 1)
-			{
-				drawFL3();
-				makeSound(3);
-			}
-		}
 	}
 
-	if (sensors[0][6] == 1)
+	if (sensors[0][4] == 1)
+	{
+		drawBR1();
+		drawBR2();
+		drawBR3();
+		makeSound(3);
+	}
+	else if (sensors[0][5] == 1)
+	{
+		drawBR1();
+		drawBR2();
+		makeSound(2);
+	}
+	else if (sensors[0][6] == 1)
 	{
 		drawBR1();
 		makeSound(1);
-		if (sensors[0][5] == 1)
-		{
-			drawBR2();
-			makeSound(2);
-			if (sensors[0][4] == 1)
-			{
-				drawBR3();
-				makeSound(2);
-			}
-				
-		}
 	}
-	if (sensors[1][6] == 1)
+
+	if (sensors[1][4] == 1)
+	{
+		drawBL1();
+		drawBL2();
+		drawBL3();
+		makeSound(3);
+	}
+	else if (sensors[1][5] == 1)
+	{
+		drawBL1();
+		drawBL2();
+		makeSound(2);
+	}
+	else if (sensors[1][6] == 1)
 	{
 		drawBL1();
 		makeSound(1);
-		if (sensors[1][5] == 1)
-		{
-			drawBL2();
-			makeSound(2);
-			if (sensors[1][4] == 1)
-			{
-				drawBL3();
-				makeSound(3);
-			}	
-		}
-	}
+	}	
 }
 
 void makeSound(int proximity)
