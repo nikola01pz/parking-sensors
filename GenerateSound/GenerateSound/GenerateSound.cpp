@@ -8,7 +8,7 @@ int main()
     const int format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
     const int channels = 2;
     const int sampleRate = 48000;
-    const char* outfilename = "B3.wav";
+    const char* outfilename = "R3.wav";
     const int frequency1 = 1350;
     const int frequency2 = 1600;
     const int frequency3 = 1850;
@@ -24,7 +24,7 @@ int main()
     SndfileHandle outfile(outfilename, SFM_WRITE, format, channels, sampleRate);
     if (not outfile) return -1;
 
-    const int size = sampleRate * 1;
+    const int size = sampleRate * 0.25;
     float sample[size * channels];  
     float factor = 1.0;
 

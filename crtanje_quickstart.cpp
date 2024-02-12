@@ -19,8 +19,6 @@
 #include <errno.h>
 #include <cstdlib>
 #include <minmax.h>
-#include <chrono>
-#include <thread>
 
 
 using namespace std;
@@ -30,7 +28,7 @@ void idle();
 
 int zvuk = 0;
 int sensors[2][8] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-int sensorSideActive[2][2] = {0, 0, 0, 0};
+int sensorSideActive[2][2] = { 0, 0, 0, 0 };
 
 // user defined functions
 void sensorDisplay();
@@ -103,7 +101,7 @@ void initGL()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // get clear background (black color)
 	glClearDepth(1.0f); // color depth buffer
 	glDepthFunc(GL_LEQUAL); // configuration of depth testing
-							//enable additional options regarding: perspective correction, anti-aliasing, etc
+	//enable additional options regarding: perspective correction, anti-aliasing, etc
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_POLYGON_SMOOTH);
@@ -116,10 +114,10 @@ void loadTexture()
 	GLuint texture[1]; // declaring space for one texture
 	int twidth, theight; // declaring variable for width and height of an image
 	unsigned char* tdata; // declaring pixel data
-						  // loading image data from specific file:
+	// loading image data from specific file:
 	tdata = loadPPM("..\\auto3.ppm", twidth, theight);
 	if (tdata == NULL) return; // check if image data is loaded
-							   // generating a texture to show the image
+	// generating a texture to show the image
 	glGenTextures(1, &texture[0]);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -292,7 +290,7 @@ void readSensors(unsigned char key, int x, int y) {
 		display();
 	}
 	printf("Activation matrix:\n");
-	for (int i = 0; i < 2; i++) 
+	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
@@ -300,7 +298,7 @@ void readSensors(unsigned char key, int x, int y) {
 		}
 		printf("\n");
 	}
-	
+
 	printf("Sensor sides active:\n");
 	for (int i = 0; i < 2; i++)
 	{
@@ -380,8 +378,10 @@ void sensorDisplay()
 			drawFL2();
 			makeSound(2);
 			if (sensors[1][3] == 1)
+			{
 				drawFL3();
 				makeSound(3);
+			}
 		}
 	}
 
@@ -394,8 +394,11 @@ void sensorDisplay()
 			drawBR2();
 			makeSound(2);
 			if (sensors[0][4] == 1)
+			{
 				drawBR3();
 				makeSound(2);
+			}
+				
 		}
 	}
 	if (sensors[1][6] == 1)
@@ -407,8 +410,10 @@ void sensorDisplay()
 			drawBL2();
 			makeSound(2);
 			if (sensors[1][4] == 1)
+			{
 				drawBL3();
 				makeSound(3);
+			}	
 		}
 	}
 }
@@ -439,15 +444,15 @@ void makeSoundRight(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	}
 }
@@ -457,15 +462,15 @@ void makeSoundLeft(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	}
 }
@@ -475,15 +480,15 @@ void makeSoundFront(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	}
 }
@@ -493,15 +498,15 @@ void makeSoundBack(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		Sleep(2000);
 		break;
 	}
 }
@@ -586,7 +591,7 @@ void drawBL1()
 	glVertex3f(1.14f, -0.55f, 0.0f);
 	glVertex3f(1.22f, -0.60f, 0.0f);
 }
-void drawBL2() 
+void drawBL2()
 {
 	glColor3f(1.0, 0.35, 0.35);
 	glVertex3f(1.35f, -0.20f, 0.00f);
