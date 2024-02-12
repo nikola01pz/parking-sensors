@@ -1,13 +1,14 @@
 ﻿  crtanje_quickstart.cpp
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(320,18): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(320,15): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(320,12): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(386,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(386,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(410,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(410,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(434,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(434,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(458,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(458,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(289,28): warning C4553: '==': result of expression not used; did you intend '='?
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(348,18): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(348,15): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(348,12): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(519,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(519,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(543,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(543,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(567,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(567,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(591,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\crtanje_quickstart.cpp(591,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
   ParkingSensors.vcxproj -> C:\stuff\faks\diplomski\okapp\project\ParkingSensorsWindows\Debug\ParkingSensors.exe

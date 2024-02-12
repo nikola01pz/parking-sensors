@@ -18,18 +18,19 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <cstdlib>
-#include<minmax.h>
-
+#include <minmax.h>
+#include <chrono>
+#include <thread>
 
 
 using namespace std;
 void display(void);
 void reshape(int, int);
 void idle();
-void readSensors(unsigned char, int, int);
+
 int zvuk = 0;
 int sensors[2][8] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-int direction[2] = { 0, 0 };
+int sensorSideActive[2][2] = {0, 0, 0, 0};
 
 // user defined functions
 void sensorDisplay();
@@ -46,8 +47,13 @@ void drawBL1();
 void drawBL2();
 void drawBL3();
 
-
+void readSensors(unsigned char, int, int);
 void selectBackgroundColor(int r, int g, int b);
+void makeSound(int proximity);
+void makeSoundRight(int proximity);
+void makeSoundLeft(int proximity);
+void makeSoundFront(int proximity);
+void makeSoundBack(int proximity);
 
 unsigned char* loadPPM(const char* filename, int& width, int& height) {
 	const int BUFSIZE = 128;
@@ -89,7 +95,6 @@ unsigned char* loadPPM(const char* filename, int& width, int& height) {
 	}
 	return rawData;
 }
-
 
 void initGL()
 {
@@ -160,109 +165,116 @@ void readSensors(unsigned char key, int x, int y) {
 		sensors[0][1] = 0;
 		sensors[0][2] = 0;
 		sensors[0][3] = 0;
+		sensorSideActive[0][0] = 0;
 		display();
 		break;
 	case 'w':
 		sensors[0][1] = 1;
 		sensors[0][2] = 0;
 		sensors[0][3] = 0;
+		sensorSideActive[0][0] = 1;
 		display();
 		break;
 	case 'e':
 		sensors[0][1] = 1;
 		sensors[0][2] = 1;
 		sensors[0][3] = 0;
+		sensorSideActive[0][0] = 1;
 		display();
 		break;
 	case 'r':
 		sensors[0][1] = 1;
 		sensors[0][2] = 1;
 		sensors[0][3] = 1;
+		sensorSideActive[0][0] = 1;
 		display();
 		break;
 	case 't':
 		sensors[0][4] = 1;
 		sensors[0][5] = 1;
 		sensors[0][6] = 1;
+		sensorSideActive[0][1] = 1;
 		display();
 		break;
 	case 'z':
 		sensors[0][4] = 0;
 		sensors[0][5] = 1;
 		sensors[0][6] = 1;
+		sensorSideActive[0][1] = 1;
 		display();
 		break;
 	case 'u':
 		sensors[0][4] = 0;
 		sensors[0][5] = 0;
 		sensors[0][6] = 1;
+		sensorSideActive[0][1] = 1;
 		display();
 		break;
 	case 'i':
 		sensors[0][4] = 0;
 		sensors[0][5] = 0;
 		sensors[0][6] = 0;
+		sensorSideActive[0][1] = 0;
 		display();
 		break;
 	case 'a':
 		sensors[1][1] = 0;
 		sensors[1][2] = 0;
 		sensors[1][3] = 0;
+		sensorSideActive[1][0] = 0;
 		display();
 		break;
 	case 's':
 		sensors[1][1] = 1;
 		sensors[1][2] = 0;
 		sensors[1][3] = 0;
+		sensorSideActive[1][0] = 1;
 		display();
 		break;
 	case 'd':
 		sensors[1][1] = 1;
 		sensors[1][2] = 1;
 		sensors[1][3] = 0;
+		sensorSideActive[1][0] = 1;
 		display();
 		break;
 	case 'f':
 		sensors[1][1] = 1;
 		sensors[1][2] = 1;
 		sensors[1][3] = 1;
+		sensorSideActive[1][0] = 1;
 		display();
 		break;
 	case 'g':
 		sensors[1][4] = 1;
 		sensors[1][5] = 1;
 		sensors[1][6] = 1;
+		sensorSideActive[1][1] = 1;
 		display();
 		break;
 	case 'h':
 		sensors[1][4] = 0;
 		sensors[1][5] = 1;
 		sensors[1][6] = 1;
+		sensorSideActive[1][1] = 1;
 		display();
 		break;
 	case 'j':
 		sensors[1][4] = 0;
 		sensors[1][5] = 0;
 		sensors[1][6] = 1;
+		sensorSideActive[1][1] = 1;
 		display();
 		break;
 	case 'k':
 		sensors[1][4] = 0;
 		sensors[1][5] = 0;
 		sensors[1][6] = 0;
-		display();
-		break;
-	case 'y':
-		direction[0] = 1;
-		direction[1] = 0;
-		display();
-		break;
-	case 'x':
-		direction[0] = 0;
-		direction[1] = 1;
+		sensorSideActive[1][1] = 0;
 		display();
 		break;
 	case 'c':
+		PlaySound(NULL, NULL, 0);
 		for (int i = 0; i < 2; i++)
 		{
 			for (int j = 0; j < 8; j++)
@@ -270,9 +282,16 @@ void readSensors(unsigned char key, int x, int y) {
 				sensors[i][j] = 0;
 			}
 		}
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				sensorSideActive[i][j] == 0;
+			}
+		}
 		display();
 	}
-	printf("Activation matrix\n");
+	printf("Activation matrix:\n");
 	for (int i = 0; i < 2; i++) 
 	{
 		for (int j = 0; j < 8; j++)
@@ -281,8 +300,18 @@ void readSensors(unsigned char key, int x, int y) {
 		}
 		printf("\n");
 	}
-	printf("Direction: %d %d\n", direction[0], direction[1]);
+	
+	printf("Sensor sides active:\n");
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			printf("%d\t", sensorSideActive[i][j]);
+		}
+		printf("\n");
+	}
 }
+
 void display() {
 	cerr << "display callback" << endl;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -292,7 +321,6 @@ void display() {
 	glEnd();
 	glutSwapBuffers();
 }
-
 
 void reshape(int width, int height)
 {
@@ -326,50 +354,156 @@ void selectBackgroundColor(int r, int g, int b)
 
 void sensorDisplay()
 {
+	PlaySound(NULL, NULL, 0);
 	if (sensors[0][1] == 1)
 	{
 		drawFR1();
+		makeSound(1);
 		if (sensors[0][2] == 1)
 		{
 			drawFR2();
+			makeSound(2);
 			if (sensors[0][3] == 1)
+			{
 				drawFR3();
+				makeSound(3);
+			}
 		}
 	}
 
 	if (sensors[1][1] == 1)
 	{
 		drawFL1();
+		makeSound(1);
 		if (sensors[1][2] == 1)
 		{
 			drawFL2();
+			makeSound(2);
 			if (sensors[1][3] == 1)
 				drawFL3();
+				makeSound(3);
 		}
 	}
 
 	if (sensors[0][6] == 1)
 	{
 		drawBR1();
+		makeSound(1);
 		if (sensors[0][5] == 1)
 		{
 			drawBR2();
+			makeSound(2);
 			if (sensors[0][4] == 1)
 				drawBR3();
+				makeSound(2);
 		}
 	}
 	if (sensors[1][6] == 1)
 	{
 		drawBL1();
+		makeSound(1);
 		if (sensors[1][5] == 1)
 		{
 			drawBL2();
+			makeSound(2);
 			if (sensors[1][4] == 1)
 				drawBL3();
+				makeSound(3);
 		}
 	}
+}
 
-		
+void makeSound(int proximity)
+{
+	if (sensorSideActive[0][0] == 1 && sensorSideActive[1][0] == 1)
+	{
+		makeSoundFront(proximity);
+	}
+	else if (sensorSideActive[0][1] == 1 && sensorSideActive[1][1] == 1)
+	{
+		makeSoundBack(proximity);
+	}
+	else if (sensorSideActive[0][0] == 1 || sensorSideActive[0][1] == 1)
+	{
+		makeSoundRight(proximity);
+	}
+	else if (sensorSideActive[1][0] == 1 || sensorSideActive[1][1] == 1)
+	{
+		makeSoundLeft(proximity);
+	}
+}
+
+void makeSoundRight(int proximity)
+{
+	switch (proximity)
+	{
+	case 1:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 2:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 3:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	}
+}
+void makeSoundLeft(int proximity)
+{
+	switch (proximity)
+	{
+	case 1:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 2:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 3:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	}
+}
+void makeSoundFront(int proximity)
+{
+	switch (proximity)
+	{
+	case 1:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 2:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 3:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	}
+}
+void makeSoundBack(int proximity)
+{
+	switch (proximity)
+	{
+	case 1:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 2:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	case 3:
+		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
+		std::this_thread::sleep_for(std::chrono::seconds(2));
+		break;
+	}
 }
 
 void drawFR1()
@@ -380,7 +514,6 @@ void drawFR1()
 	glVertex3f(-1.14f, 0.55f, 0.0f);
 	glVertex3f(-1.22f, 0.60f, 0.0f);
 }
-
 void drawFR2()
 {
 	glColor3f(1.0, 0.35, 0.35);
