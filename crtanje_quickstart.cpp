@@ -48,6 +48,7 @@ void drawBL3();
 void readSensors(unsigned char, int, int);
 void selectBackgroundColor(int r, int g, int b);
 void makeSound(int proximity);
+void playSoundIntensity();
 void makeSoundRight(int proximity);
 void makeSoundLeft(int proximity);
 void makeSoundFront(int proximity);
@@ -160,6 +161,7 @@ void readSensors(unsigned char key, int x, int y) {
 	switch (key)
 	{
 	case 'q':
+		PlaySound(NULL, NULL, 0);
 		sensors[0][1] = 0;
 		sensors[0][2] = 0;
 		sensors[0][3] = 0;
@@ -209,6 +211,7 @@ void readSensors(unsigned char key, int x, int y) {
 		display();
 		break;
 	case 'i':
+		PlaySound(NULL, NULL, 0);
 		sensors[0][4] = 0;
 		sensors[0][5] = 0;
 		sensors[0][6] = 0;
@@ -216,6 +219,7 @@ void readSensors(unsigned char key, int x, int y) {
 		display();
 		break;
 	case 'a':
+		PlaySound(NULL, NULL, 0);
 		sensors[1][1] = 0;
 		sensors[1][2] = 0;
 		sensors[1][3] = 0;
@@ -265,6 +269,7 @@ void readSensors(unsigned char key, int x, int y) {
 		display();
 		break;
 	case 'k':
+		PlaySound(NULL, NULL, 0);
 		sensors[1][4] = 0;
 		sensors[1][5] = 0;
 		sensors[1][6] = 0;
@@ -284,7 +289,7 @@ void readSensors(unsigned char key, int x, int y) {
 		{
 			for (int j = 0; j < 2; j++)
 			{
-				sensorSideActive[i][j] == 0;
+				sensorSideActive[i][j] = 0;
 			}
 		}
 		display();
@@ -352,24 +357,20 @@ void selectBackgroundColor(int r, int g, int b)
 
 void sensorDisplay()
 {
-	PlaySound(NULL, NULL, 0);
 	if (sensors[0][3] == 1)
 	{
 		drawFR1();
 		drawFR2();
 		drawFR3();
-		makeSound(3);
 	}
 	else if (sensors[0][2] == 1)
 	{
 		drawFR1();
 		drawFR2();
-		makeSound(2);
-	} 
+	}
 	else if (sensors[0][1] == 1)
 	{
 		drawFR1();
-		makeSound(1);
 	}
 
 	if (sensors[1][3] == 1)
@@ -377,18 +378,15 @@ void sensorDisplay()
 		drawFL1();
 		drawFL2();
 		drawFL3();
-		makeSound(3);
 	}
 	else if (sensors[1][2] == 1)
 	{
 		drawFL1();
 		drawFL2();
-		makeSound(2);
 	}
 	else if (sensors[1][1] == 1)
 	{
 		drawFL1();
-		makeSound(1);
 	}
 
 	if (sensors[0][4] == 1)
@@ -396,18 +394,15 @@ void sensorDisplay()
 		drawBR1();
 		drawBR2();
 		drawBR3();
-		makeSound(3);
 	}
 	else if (sensors[0][5] == 1)
 	{
 		drawBR1();
 		drawBR2();
-		makeSound(2);
 	}
 	else if (sensors[0][6] == 1)
 	{
 		drawBR1();
-		makeSound(1);
 	}
 
 	if (sensors[1][4] == 1)
@@ -415,36 +410,47 @@ void sensorDisplay()
 		drawBL1();
 		drawBL2();
 		drawBL3();
-		makeSound(3);
 	}
 	else if (sensors[1][5] == 1)
 	{
 		drawBL1();
 		drawBL2();
-		makeSound(2);
 	}
 	else if (sensors[1][6] == 1)
 	{
 		drawBL1();
+	}
+	playSoundIntensity();
+}
+
+void playSoundIntensity() {
+	PlaySound(NULL, NULL, 0);
+	if (sensors[0][3] || sensors[1][3] || sensors[0][4] || sensors[1][4]) {
+		makeSound(3);
+	}
+	else if (sensors[0][2] || sensors[1][2] || sensors[0][5] || sensors[1][5]) {
+		makeSound(2);
+	}
+	else if (sensors[0][1] || sensors[1][1] || sensors[0][6] || sensors[1][6]) {
 		makeSound(1);
-	}	
+	}
 }
 
 void makeSound(int proximity)
 {
-	if (sensorSideActive[0][0] == 1 && sensorSideActive[1][0] == 1)
+	if (sensorSideActive[0][0] && sensorSideActive[1][0])
 	{
 		makeSoundFront(proximity);
 	}
-	else if (sensorSideActive[0][1] == 1 && sensorSideActive[1][1] == 1)
+	else if (sensorSideActive[0][1] && sensorSideActive[1][1])
 	{
 		makeSoundBack(proximity);
 	}
-	else if (sensorSideActive[0][0] == 1 || sensorSideActive[0][1] == 1)
+	else if (sensorSideActive[0][0] || sensorSideActive[0][1])
 	{
 		makeSoundRight(proximity);
 	}
-	else if (sensorSideActive[1][0] == 1 || sensorSideActive[1][1] == 1)
+	else if (sensorSideActive[1][0] || sensorSideActive[1][1])
 	{
 		makeSoundLeft(proximity);
 	}
@@ -456,15 +462,15 @@ void makeSoundRight(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/R3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	}
 }
@@ -474,15 +480,15 @@ void makeSoundLeft(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/L3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	}
 }
@@ -492,15 +498,15 @@ void makeSoundFront(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/F3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	}
 }
@@ -510,15 +516,15 @@ void makeSoundBack(int proximity)
 	{
 	case 1:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B1.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 2:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B2.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	case 3:
 		PlaySound("C:/stuff/faks/diplomski/okapp/project/ParkingSensorsWindows/GenerateSound/GenerateSound/ParkingSensorsAudio/B3.wav", NULL, SND_ASYNC | SND_LOOP | SND_FILENAME);
-		Sleep(2000);
+		Sleep(250);
 		break;
 	}
 }
